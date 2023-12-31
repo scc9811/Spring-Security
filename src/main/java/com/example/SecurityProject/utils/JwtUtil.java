@@ -7,6 +7,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 
 public class JwtUtil {
+
+    public static boolean isExpired(String token, String secretKey) {
+        // 현재시간보다 getExpiration()에서 가져온 값이 이전인 경우 expired 된 것이라고 판단.
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                .getBody().getExpiration().before(new Date());
+    }
+
     public static String createJwt(String userName, String secretKey, Long expiredMs){
         Claims claims = Jwts.claims();
         claims.put("userName", userName);
