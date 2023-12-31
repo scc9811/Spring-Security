@@ -15,23 +15,24 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // csrf, cors는 사용 X
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         httpRequests -> httpRequests
+                                // /api/v1~~ 은 모든 접근을 허용.
                                 .requestMatchers("/api/v1/users/login").permitAll()
+                                // 나머지 리소스(anyRequest) 접근에 대해서는 인증(authenticated)을 거쳐야 함.
                                 .anyRequest().authenticated()
                 );
 
         return http.build();
     }
-
-
 }
 
 
-//
+
 //@Configuration
 //@EnableWebSecurity
 //public class SecurityConfig {
@@ -40,7 +41,7 @@ public class SecurityConfig{
 //    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        http
 //                .csrf(Customizer.withDefaults())
-//                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/api/v1/users/login").permitAll()
+//                .authorizeHttpRequests(httpRequest -> httpRequest.requestMatchers("/api/v1/users/login").permitAll()
 //                        .anyRequest()
 //                        .authenticated()
 //                )
